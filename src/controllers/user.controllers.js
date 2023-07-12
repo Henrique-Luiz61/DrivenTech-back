@@ -5,11 +5,13 @@ import { db } from '../database/database.connection.js';
 export async function signUp(req, res){
   const {name, email, password} = req.body;
 
-  const hash = bcrypt.hashSync(password, 10);
+  
 
   try{
-    const verifyEmail = db.collection('users').findOne({ email });
+    const verifyEmail = await db.collection('users').findOne({ email });
     if (verifyEmail) return res.status(409).send('Email ja cadastrado');
+
+    const hash = bcrypt.hashSync(password, 10);
 
     await db.collection('users').insertOne({ name, email, password: hash });
     res.sendStatus(201);
