@@ -1,7 +1,5 @@
 import { ObjectId } from 'mongodb';
 import { db } from '../database/database.connection.js';
-import { v4 as uuid } from 'uuid';
-
 
 export async function getProducts(req, res){
 
