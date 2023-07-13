@@ -5,8 +5,6 @@ import { db } from '../database/database.connection.js';
 export async function signUp(req, res){
   const {name, email, password} = req.body;
 
-  
-
   try{
     const verifyEmail = await db.collection('users').findOne({ email });
     if (verifyEmail) return res.status(409).send('Email ja cadastrado');
@@ -22,6 +20,7 @@ export async function signUp(req, res){
 
 export async function signIn(req, res){
     const { email, password } = req.body;
+    
     try{
         const user = await db.collection('users').findOne({ email })
         if (!user) return res.status(404).send('Email não cadastrado');
