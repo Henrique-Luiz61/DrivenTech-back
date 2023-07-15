@@ -7,6 +7,6 @@ import {
 const cartRouter = Router();
 
 cartRouter.post("/addToCart", postProdToCart);
-cartRouter.get("/addToCart", getProductsCart);
+cartRouter.get("/productsCart", getProductsCart);
 
 export default cartRouter;
