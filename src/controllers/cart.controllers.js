@@ -19,6 +19,7 @@ export async function postProdToCart(req, res) {
       description,
       price,
     });
+    res.sendStatus(201)
   } catch (err) {
     res.status(500).send(err.message);
   }
