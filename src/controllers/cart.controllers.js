@@ -1,7 +1,8 @@
 import { db } from "../database/database.connection.js";
+import { ObjectId } from "mongodb";
 
 export async function postProdToCart(req, res) {
-  console.log(req.body)
+  console.log(req.body);
   const { image, title, description, price } = req.body;
   const { authorization } = req.headers;
   const token = authorization?.replace("Bearer ", "");
@@ -19,6 +20,8 @@ export async function postProdToCart(req, res) {
       description,
       price,
     });
+
+    res.sendStatus(200);
   } catch (err) {
     res.status(500).send(err.message);
   }
@@ -37,7 +40,7 @@ export async function getProductsCart(req, res) {
     const productsCart = await db
       .collection("productsCart")
       .find({ userId: session.userId })
-      .toArray();    
+      .toArray();
 
     res.send({ productsCart });
   } catch (err) {
@@ -45,12 +48,34 @@ export async function getProductsCart(req, res) {
   }
 }
 
-export async function postCheckout(req, res) {
- 
+export async function deleteProductsCart(req, res) {
+  const { deletedProd } = req.body;
+  const { authorization } = req.headers;
+  const token = authorization?.replace("Bearer ", "");
+
+  if (!token) return res.sendStatus(401);
+
   try {
-    const pedidoFinalizado = req.body ;
+    const session = await db.collection("sessions").findOne({ token });
+    if (!session) return res.sendStatus(401);
+
+    await db
+      .collection("productsCart")
+      .deleteOne({ _id: new ObjectId(deletedProd.id) });
+
+    res.sendStatus(204);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+}
+
+export async function postCheckout(req, res) {
+  try {
+    const pedidoFinalizado = req.body;
     await db.collection("saleFinished").insertOne(pedidoFinalizado);
-    res.status(201).send("Compra efetuada com sucesso, obrigado e volte sempre!!");
+    res
+      .status(201)
+      .send("Compra efetuada com sucesso, obrigado e volte sempre!!");
   } catch (err) {
     return res.status(500).send(err.message);
   }
