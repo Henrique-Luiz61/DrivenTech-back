@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   postProdToCart,
   getProductsCart,
-} from "../controllers/cart.controllers";
+} from "../controllers/cart.controllers.js";
 
 const cartRouter = Router();
 
