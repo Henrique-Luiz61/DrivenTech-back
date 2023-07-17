@@ -37,22 +37,21 @@ export async function getProductsCart(req, res) {
     const productsCart = await db
       .collection("productsCart")
       .find({ userId: session.userId })
-      .toArray();
+      .toArray();    
 
-    let subTotal = 0;
-
-    productsCart.map((p) => {
-       subTotal = (subTotal + Number(p.price))
-    })
-
-
-    // for (let i = 0; i < productsCart.length; i++) {
-    //   subTotal += Number(productsCart[i].price);
-    // }
-    console.log(Number(subTotal))
-
-    res.send({ productsCart, subTotal });
+    res.send({ productsCart });
   } catch (err) {
     res.status(500).send(err.message);
+  }
+}
+
+export async function postCheckout(req, res) {
+ 
+  try {
+    const pedidoFinalizado = req.body ;
+    await db.collection("saleFinished").insertOne(pedidoFinalizado);
+    res.status(201).send("Compra efetuada com sucesso, obrigado e volte sempre!!");
+  } catch (err) {
+    return res.status(500).send(err.message);
   }
 }
